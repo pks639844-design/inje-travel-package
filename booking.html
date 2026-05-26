@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예약하기 — 인제 숲결</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: var(--bg); }
+
+  .booking-top {
+    padding-top: 130px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+  }
+  .booking-top h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .booking-top p { color: var(--ink-2); margin-top: 16px; max-width: 56ch; }
+
+  /* Steps */
+  .step-bar {
+    display: flex;
+    gap: 0;
+    margin-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  .step {
+    flex: 1;
+    padding: 18px 0;
+    font-size: 13px;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.02em;
+    border-top: 2px solid transparent;
+    margin-top: -1px;
+    transition: all 0.3s;
+  }
+  .step.active { color: var(--green-deep); border-top-color: var(--green-deep); font-weight: 500; }
+  .step.done { color: var(--green); }
+  .step-num {
+    width: 24px; height: 24px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-family: var(--font-serif);
+  }
+  .step.active .step-num { background: var(--green-deep); color: var(--bg); border-color: var(--green-deep); }
+  .step.done .step-num::after { content: "✓"; font-family: var(--font-sans); }
+  .step.done .step-num span { display: none; }
+
+  /* Layout */
+  .booking-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 80px;
+    padding: 64px 0 120px;
+    align-items: start;
+  }
+  @media (max-width: 980px) {
+    .booking-layout { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  .booking-main { min-width: 0; }
+
+  /* Step section */
+  .step-section { display: none; }
+  .step-section.active { display: block; }
+  .step-section h2 {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+  }
+  .step-section .step-sub {
+    color: var(--ink-3);
+    margin-bottom: 36px;
+    font-size: 14px;
+  }
+
+  /* Package selector */
+  .pkg-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .pkg-option {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    gap: 24px;
+    padding: 20px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-items: center;
+  }
+  .pkg-option:hover { border-color: var(--green-soft); background: var(--bg-cream); }
+  .pkg-option.selected {
+    border-color: var(--green-deep);
+    background: var(--bg-cream);
+    box-shadow: 0 0 0 1px var(--green-deep);
+  }
+  .pkg-option-img {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--green-deep);
+  }
+  .pkg-option-img img { width: 100%; height: 100%; object-fit: cover; }
+  .pkg-option-body h3 {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .pkg-option-body p { font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+  .pkg-option-meta {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .pkg-option-price {
+    text-align: right;
+    font-family: var(--font-serif);
+    font-size: 19px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .pkg-option-price .small {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 680px) {
+    .pkg-option { grid-template-columns: 80px 1fr; }
+    .pkg-option-price { grid-column: 2; text-align: left; }
+  }
+
+  /* Calendar */
+  .cal-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+  }
+  .cal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .cal-month {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .cal-month .yr {
+    font-size: 13px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    margin-left: 8px;
+  }
+  .cal-nav {
+    display: flex; gap: 4px;
+  }
+  .cal-nav button {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    font-size: 16px;
+  }
+  .cal-nav button:hover:not(:disabled) {
+    background: var(--green-deep); color: var(--bg); border-color: var(--green-deep);
+  }
+  .cal-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-dow {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.16em;
+    padding: 8px 0;
+    text-transform: uppercase;
+  }
+  .cal-dow.sun { color: #C44A4A; }
+  .cal-dow.sat { color: #4A6FB8; }
+  .cal-day {
+    aspect-ratio: 1;
+    border: 1px solid transparent;
+    background: none;
+    border-radius: 4px;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    position: relative;
+    padding: 4px;
+  }
+  .cal-day:hover:not(.disabled):not(.empty) {
+    background: var(--bg-cream);
+    border-color: var(--green-soft);
+  }
+  .cal-day.empty { cursor: default; visibility: hidden; }
+  .cal-day.disabled {
+    color: var(--ink-3);
+    cursor: not-allowed;
+    opacity: 0.35;
+    text-decoration: line-through;
+  }
+  .cal-day.weekend-warn {
+    color: var(--gold);
+  }
+  .cal-day.weekend-warn .day-tag {
+    background: var(--gold);
+  }
+  .cal-day.selected {
+    background: var(--green-deep) !important;
+    color: var(--bg) !important;
+    border-color: var(--green-deep);
+  }
+  .cal-day.selected .day-tag { background: var(--bg); color: var(--green-deep); }
+  .cal-day.full {
+    cursor: not-allowed;
+    color: var(--ink-3);
+    opacity: 0.55;
+  }
+  .cal-day.full::after {
+    content: "마감";
+    position: absolute;
+    bottom: 4px;
+    font-size: 9px;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #C44A4A;
+  }
+
+  .day-tag {
+    position: absolute;
+    bottom: 4px;
+    font-size: 9px;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--green);
+  }
+  .cal-day.early .day-tag::before { content: "얼리"; }
+  .cal-day.weekend-warn .day-tag::before { content: "+₩20K"; }
+
+  .cal-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .cal-legend span { display: flex; align-items: center; gap: 8px; }
+  .cal-legend span::before {
+    content: "";
+    width: 12px; height: 12px;
+    border-radius: 2px;
+  }
+  .legend-avail::before { background: var(--bg); border: 1px solid var(--line); }
+  .legend-weekend::before { background: var(--gold); }
+  .legend-full::before { background: var(--bg); border: 1px solid var(--line); position: relative; }
+  .legend-selected::before { background: var(--green-deep); }
+
+  /* Guests + options */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field label {
+    font-size: 12px;
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .form-field input, .form-field select, .form-field textarea {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    transition: border-color 0.2s;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    outline: none;
+    border-color: var(--green-deep);
+  }
+
+  .counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 16px;
+  }
+  .counter-info strong {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+  }
+  .counter-info span {
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .counter-controls { display: flex; align-items: center; gap: 14px; }
+  .counter-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .counter-btn:hover:not(:disabled) {
+    background: var(--green-deep); color: var(--bg); border-color: var(--green-deep);
+  }
+  .counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .counter-val {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    min-width: 24px;
+    text-align: center;
+  }
+
+  /* Options */
+  .opt-list { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+  .opt-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .opt-item:hover { border-color: var(--green-soft); }
+  .opt-item.checked { border-color: var(--green-deep); background: var(--bg-cream); }
+  .opt-item-left { display: flex; align-items: center; gap: 14px; }
+  .opt-check {
+    width: 22px; height: 22px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg);
+    transition: all 0.2s;
+  }
+  .opt-item.checked .opt-check {
+    background: var(--green-deep); border-color: var(--green-deep);
+  }
+  .opt-item.checked .opt-check::after {
+    content: "✓"; color: var(--bg); font-size: 13px;
+  }
+  .opt-item-body strong {
+    display: block; font-size: 15px; font-weight: 500;
+  }
+  .opt-item-body span {
+    font-size: 12px; color: var(--ink-3);
+  }
+  .opt-item-price {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--green-deep);
+    font-weight: 500;
+  }
+
+  /* Nav buttons */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Summary card */
+  .summary-card {
+    background: var(--bg-cream);
+    border-radius: 4px;
+    padding: 32px;
+    position: sticky;
+    top: 100px;
+  }
+  .summary-card h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .summary-card .sum-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+  .sum-pkg {
+    padding-bottom: 24px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sum-pkg-name {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .sum-pkg-detail { font-size: 13px; color: var(--ink-2); line-height: 1.6; }
+
+  .sum-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .sum-row strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .sum-row.faint { color: var(--ink-3); font-size: 13px; }
+  .sum-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .sum-total-label { font-size: 13px; color: var(--ink-2); letter-spacing: 0.04em; }
+  .sum-total-value {
+    font-family: var(--font-serif);
+    font-size: 30px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .sum-deposit {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .sum-deposit strong { display: block; color: var(--ink); font-size: 13px; margin-bottom: 4px; }
+
+  .sum-empty {
+    color: var(--ink-3);
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Confirmation step (military related fields, etc) */
+  .agree-block {
+    background: var(--bg-cream);
+    padding: 20px 24px;
+    border-radius: 4px;
+    margin-top: 16px;
+  }
+  .agree-block label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .agree-block label:last-child { margin-bottom: 0; }
+  .agree-block input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--green-deep);
+  }
+</style>
+</head>
+<body data-screen-label="03 Booking">
+
+<!-- Nav -->
+<nav class="nav scrolled" id="nav">
+  <a href="index.html" class="logo">
+    <span class="logo-mark"></span>
+    <span>인제 숲결<span class="logo-sub">INJE FOREST WHISPER</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#packages" class="nav-link">패키지</a>
+    <a href="packages/birch.html" class="nav-link">자작나무숲</a>
+    <a href="packages/blueberry.html" class="nav-link">블루베리 체험</a>
+    <a href="index.html#military" class="nav-link">군장병 면회</a>
+    <a href="index.html#faq" class="nav-link">자주 묻는 질문</a>
+  </div>
+  <a href="tel:1588-0000" class="btn btn-ghost">1588-0000 문의</a>
+</nav>
+
+<section class="booking-top">
+  <div class="container">
+    <div class="eyebrow">예약</div>
+    <h1>네 단계로,<br>짧게 마치겠습니다.</h1>
+    <p>패키지를 고르고, 달력에서 출발일을 선택해 주세요. 결제는 카드·계좌이체·간편결제 모두 가능합니다.</p>
+
+    <div class="step-bar">
+      <div class="step active" id="step-1">
+        <div class="step-num"><span>1</span></div>
+        <span>패키지 선택</span>
+      </div>
+      <div class="step" id="step-2">
+        <div class="step-num"><span>2</span></div>
+        <span>출발일 선택</span>
+      </div>
+      <div class="step" id="step-3">
+        <div class="step-num"><span>3</span></div>
+        <span>인원 · 옵션</span>
+      </div>
+      <div class="step" id="step-4">
+        <div class="step-num"><span>4</span></div>
+        <span>예약자 정보</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container booking-layout">
+  <main class="booking-main">
+
+    <!-- ============== STEP 1: Package ============== -->
+    <section class="step-section active" data-step="1">
+      <h2>어떤 패키지로 떠나시겠습니까?</h2>
+      <p class="step-sub">모든 패키지는 평일 새벽 5시 30분 강남·잠실 출발이 기본입니다.</p>
+
+      <div class="pkg-options">
+        <label class="pkg-option" data-pkg="birch" data-price="189000" data-nights="1">
+          <div class="pkg-option-img">
+            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=400&q=80&auto=format&fit=crop" alt="자작나무">
+          </div>
+          <div class="pkg-option-body">
+            <h3>원대리 자작나무 숲 1박 2일</h3>
+            <p>새벽 안개의 자작나무 숲, 한옥 스테이, 화로 한정식.</p>
+            <div class="pkg-option-meta">
+              <span>1박 2일</span><span>·</span>
+              <span>연중 운영</span><span>·</span>
+              <span>최대 16명</span>
+            </div>
+          </div>
+          <div class="pkg-option-price">
+            <span class="small">1인 기준</span>
+            ₩ 189,000
+          </div>
+        </label>
+
+        <label class="pkg-option" data-pkg="blueberry" data-price="159000" data-nights="1">
+          <div class="pkg-option-img">
+            <img src="https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=400&q=80&auto=format&fit=crop" alt="블루베리">
+          </div>
+          <div class="pkg-option-body">
+            <h3>인제 블루베리 농원 1박 2일</h3>
+            <p>북면 청정 농원 독점 1시간, 잼·사이다 만들기, 1.2kg 수확.</p>
+            <div class="pkg-option-meta">
+              <span>1박 2일</span><span>·</span>
+              <span>6–8월 시즌</span><span>·</span>
+              <span>아동 환영</span>
+            </div>
+          </div>
+          <div class="pkg-option-price">
+            <span class="small">1인 기준</span>
+            ₩ 159,000
+          </div>
+        </label>
+
+        <label class="pkg-option" data-pkg="combo" data-price="349000" data-nights="2">
+          <div class="pkg-option-img">
+            <img src="https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=400&q=80&auto=format&fit=crop" alt="콤보">
+          </div>
+          <div class="pkg-option-body">
+            <h3>자작나무 + 블루베리 풀 코스 2박 3일</h3>
+            <p>두 대표 체험과 내린천 래프팅 옵션이 포함된 풀코스.</p>
+            <div class="pkg-option-meta">
+              <span>2박 3일</span><span>·</span>
+              <span>6–8월 시즌</span><span>·</span>
+              <span>베스트셀러</span>
+            </div>
+          </div>
+          <div class="pkg-option-price">
+            <span class="small">1인 기준</span>
+            ₩ 349,000
+          </div>
+        </label>
+
+        <label class="pkg-option" data-pkg="military" data-price="139000" data-nights="1">
+          <div class="pkg-option-img">
+            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&q=80&auto=format&fit=crop" alt="군장병 면회">
+          </div>
+          <div class="pkg-option-body">
+            <h3>군장병 가족 면회 1박 2일</h3>
+            <p>부대 픽업·드롭, 외박 동선 설계, 가족 전용 차량.</p>
+            <div class="pkg-option-meta">
+              <span>1박 2일</span><span>·</span>
+              <span>연중 운영</span><span>·</span>
+              <span>가족 전용</span>
+            </div>
+          </div>
+          <div class="pkg-option-price">
+            <span class="small">1인 기준</span>
+            ₩ 139,000
+          </div>
+        </label>
+      </div>
+
+      <div class="step-nav">
+        <span></span>
+        <button class="btn btn-primary btn-arrow" onclick="goStep(2)"><span>다음 — 출발일 선택</span></button>
+      </div>
+    </section>
+
+    <!-- ============== STEP 2: Calendar ============== -->
+    <section class="step-section" data-step="2">
+      <h2>언제 출발하시겠습니까?</h2>
+      <p class="step-sub">평일 출발이 정체가 가장 적어 추천드립니다. 주말 출발은 1인 ₩20,000이 가산됩니다.</p>
+
+      <div class="cal-card">
+        <div class="cal-head">
+          <div class="cal-month">
+            <span id="cal-month-name">2026년 6월</span>
+            <span class="yr" id="cal-month-en">JUNE</span>
+          </div>
+          <div class="cal-nav">
+            <button id="cal-prev" aria-label="이전 달">‹</button>
+            <button id="cal-next" aria-label="다음 달">›</button>
+          </div>
+        </div>
+
+        <div class="cal-grid" id="cal-grid">
+          <div class="cal-dow sun">일</div>
+          <div class="cal-dow">월</div>
+          <div class="cal-dow">화</div>
+          <div class="cal-dow">수</div>
+          <div class="cal-dow">목</div>
+          <div class="cal-dow">금</div>
+          <div class="cal-dow sat">토</div>
+        </div>
+
+        <div class="cal-legend">
+          <span class="legend-avail">예약 가능 (평일 추천)</span>
+          <span class="legend-weekend">주말 ₩20,000 추가</span>
+          <span class="legend-selected">선택됨</span>
+          <span style="opacity: 0.55;">취소선 — 출발 불가일</span>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-ghost" onclick="goStep(1)">← 이전</button>
+        <button class="btn btn-primary btn-arrow" onclick="goStep(3)" id="step2-next" disabled style="opacity:0.4; cursor:not-allowed;"><span>다음 — 인원 · 옵션</span></button>
+      </div>
+    </section>
+
+    <!-- ============== STEP 3: Guests + Options ============== -->
+    <section class="step-section" data-step="3">
+      <h2>인원과 옵션을 알려주세요.</h2>
+      <p class="step-sub">아동·유아도 함께 카운트해 주세요. 옵션 액티비티는 출발 3일 전까지 변경 가능합니다.</p>
+
+      <div class="counter" style="margin-bottom: 12px;">
+        <div class="counter-info">
+          <strong>성인</strong>
+          <span>만 13세 이상</span>
+        </div>
+        <div class="counter-controls">
+          <button class="counter-btn" data-target="adults" data-delta="-1">−</button>
+          <span class="counter-val" id="count-adults">2</span>
+          <button class="counter-btn" data-target="adults" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="counter" style="margin-bottom: 12px;">
+        <div class="counter-info">
+          <strong>아동</strong>
+          <span>만 5–12세 · 1인 요금의 70%</span>
+        </div>
+        <div class="counter-controls">
+          <button class="counter-btn" data-target="children" data-delta="-1">−</button>
+          <span class="counter-val" id="count-children">0</span>
+          <button class="counter-btn" data-target="children" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="counter">
+        <div class="counter-info">
+          <strong>유아</strong>
+          <span>만 4세 이하 · 무료 · 좌석 없음</span>
+        </div>
+        <div class="counter-controls">
+          <button class="counter-btn" data-target="infants" data-delta="-1">−</button>
+          <span class="counter-val" id="count-infants">0</span>
+          <button class="counter-btn" data-target="infants" data-delta="1">+</button>
+        </div>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 22px; margin-top: 48px; margin-bottom: 8px; font-weight: 500;">추가 옵션</h3>
+      <p class="step-sub" style="margin-bottom: 20px;">선택 사항입니다. 1인당 금액이며 출발 3일 전까지 변경 가능합니다.</p>
+
+      <div class="opt-list">
+        <label class="opt-item" data-opt="single" data-price="40000">
+          <div class="opt-item-left">
+            <span class="opt-check"></span>
+            <div class="opt-item-body">
+              <strong>1인 1실 사용</strong>
+              <span>독립된 객실을 단독 사용합니다.</span>
+            </div>
+          </div>
+          <span class="opt-item-price">+ ₩ 40,000</span>
+        </label>
+        <label class="opt-item" data-opt="paddle" data-price="25000">
+          <div class="opt-item-left">
+            <span class="opt-check"></span>
+            <div class="opt-item-body">
+              <strong>패들보드 체험 (1시간)</strong>
+              <span>2일차 오전 합강 미천골에서.</span>
+            </div>
+          </div>
+          <span class="opt-item-price">+ ₩ 25,000</span>
+        </label>
+        <label class="opt-item" data-opt="photo" data-price="55000">
+          <div class="opt-item-left">
+            <span class="opt-check"></span>
+            <div class="opt-item-body">
+              <strong>전문 사진 패키지 (RAW 100장)</strong>
+              <span>편집 사진 30장 외 RAW 원본 추가 전달.</span>
+            </div>
+          </div>
+          <span class="opt-item-price">+ ₩ 55,000</span>
+        </label>
+        <label class="opt-item" data-opt="pickup" data-price="15000">
+          <div class="opt-item-left">
+            <span class="opt-check"></span>
+            <div class="opt-item-body">
+              <strong>일산·인천 픽업</strong>
+              <span>분당·판교는 무료입니다.</span>
+            </div>
+          </div>
+          <span class="opt-item-price">+ ₩ 15,000</span>
+        </label>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-ghost" onclick="goStep(2)">← 이전</button>
+        <button class="btn btn-primary btn-arrow" onclick="goStep(4)"><span>다음 — 예약자 정보</span></button>
+      </div>
+    </section>
+
+    <!-- ============== STEP 4: Personal info ============== -->
+    <section class="step-section" data-step="4">
+      <h2>예약자 정보를 입력해 주세요.</h2>
+      <p class="step-sub">출발 24시간 전 동선 안내 문자가 발송됩니다. 정확한 번호 부탁드립니다.</p>
+
+      <form id="booking-form" onsubmit="submitBooking(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="name">예약자 성함</label>
+            <input id="name" name="name" type="text" required placeholder="홍길동">
+          </div>
+          <div class="form-field">
+            <label for="phone">휴대전화 *</label>
+            <input id="phone" name="phone" type="tel" required placeholder="010-0000-0000">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="email">이메일</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-field">
+            <label for="pickup">출발 픽업지</label>
+            <select id="pickup" name="pickup">
+              <option value="gangnam">강남역 9-1번 출구 (기본)</option>
+              <option value="jamsil">잠실역 1번 출구</option>
+              <option value="bundang">분당 정자역 (무료)</option>
+              <option value="ilsan">일산 화정역 (+₩15,000)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom: 20px;">
+          <label for="memo">전달 사항 (선택)</label>
+          <textarea id="memo" name="memo" rows="3" placeholder="식사 알레르기, 동반자 정보, 군부대 면회 시 부대명·면회 시간 등을 적어주세요."></textarea>
+        </div>
+
+        <div class="agree-block">
+          <label><input type="checkbox" required> 개인정보 수집·이용 동의 (필수)</label>
+          <label><input type="checkbox" required> 취소·환불 규정 동의 (필수)</label>
+          <label><input type="checkbox"> 마케팅 정보 수신 동의 (선택 · 시즌 오픈 안내)</label>
+        </div>
+
+        <div class="step-nav">
+          <button type="button" class="btn btn-ghost" onclick="goStep(3)">← 이전</button>
+          <button type="submit" class="btn btn-primary btn-arrow"><span>예약 신청하기</span></button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ============== Summary ============== -->
+  <aside class="summary-card">
+    <div class="sum-eyebrow">예약 요약</div>
+    <h3>주문 내역</h3>
+
+    <div class="sum-pkg" id="sum-pkg" style="display:none;">
+      <div class="sum-pkg-name" id="sum-pkg-name">-</div>
+      <div class="sum-pkg-detail" id="sum-pkg-detail">-</div>
+    </div>
+
+    <div id="sum-empty" class="sum-empty">
+      먼저 패키지와 출발일을 선택해 주세요.<br>여기에 자동으로 견적이 표시됩니다.
+    </div>
+
+    <div id="sum-rows" style="display:none;">
+      <div class="sum-row"><span>출발일</span><strong id="sum-date">-</strong></div>
+      <div class="sum-row"><span>성인 <span id="sum-adults-cnt">2</span>명</span><strong id="sum-adults-amt">-</strong></div>
+      <div class="sum-row" id="sum-children-row" style="display:none;"><span>아동 <span id="sum-children-cnt">0</span>명</span><strong id="sum-children-amt">-</strong></div>
+      <div class="sum-row faint" id="sum-weekend-row" style="display:none;"><span>주말 가산</span><strong id="sum-weekend-amt">-</strong></div>
+      <div id="sum-options"></div>
+
+      <div class="sum-total">
+        <span class="sum-total-label">합계 (부가세 포함)</span>
+        <span class="sum-total-value" id="sum-total">₩ 0</span>
+      </div>
+
+      <div class="sum-deposit">
+        <strong>결제 일정 안내</strong>
+        예약 시 계약금 30% 결제 / 출발 7일 전 잔금 70% 결제.
+        출발 7일 전까지 무료 취소 가능합니다.
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">인제 숲결</div>
+        <p style="font-size: 14px; line-height: 1.7; max-width: 36ch;">
+          강원도 인제군 공식 등록 여행 패키지.<br>숲과 사람의 거리를, 가까이.
+        </p>
+      </div>
+      <div><h4>패키지</h4><ul>
+        <li><a href="packages/birch.html">자작나무숲 1박 2일</a></li>
+        <li><a href="packages/blueberry.html">블루베리 1박 2일</a></li>
+        <li><a href="booking.html?pkg=combo">콤보 2박 3일</a></li>
+        <li><a href="booking.html?pkg=military">가족 면회 패키지</a></li>
+      </ul></div>
+      <div><h4>안내</h4><ul>
+        <li><a href="index.html#faq">자주 묻는 질문</a></li>
+        <li><a href="index.html#earlybird">얼리버드 안내</a></li>
+        <li><a href="index.html#military">군장병 가족 안내</a></li>
+        <li><a href="booking.html">예약 / 결제</a></li>
+      </ul></div>
+      <div><h4>연락</h4><ul>
+        <li>1588-0000</li><li>hello@injesoop.kr</li>
+        <li>강원도 인제군 인제읍</li><li>평일 09:00 ~ 19:00</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 인제 숲결 협동조합. All rights reserved.</span>
+      <span>이용약관 · 개인정보처리방침 · 사업자정보</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== Booking state =====
+  const PKG_NAMES = {
+    birch: '원대리 자작나무 숲 1박 2일',
+    blueberry: '인제 블루베리 농원 1박 2일',
+    combo: '자작나무 + 블루베리 풀 코스 2박 3일',
+    military: '군장병 가족 면회 1박 2일'
+  };
+  const PKG_PRICES = { birch: 189000, blueberry: 159000, combo: 349000, military: 139000 };
+  const PKG_NIGHTS = { birch: 1, blueberry: 1, combo: 2, military: 1 };
+
+  const state = {
+    pkg: null,
+    date: null,
+    weekend: false,
+    adults: 2,
+    children: 0,
+    infants: 0,
+    options: {}
+  };
+
+  // ===== URL param =====
+  const params = new URLSearchParams(location.search);
+  const initialPkg = params.get('pkg');
+  if (initialPkg && PKG_PRICES[initialPkg]) {
+    // select that package automatically
+    setTimeout(() => {
+      const opt = document.querySelector(`.pkg-option[data-pkg="${initialPkg}"]`);
+      if (opt) opt.click();
+    }, 50);
+  }
+
+  // ===== Step nav =====
+  function goStep(n) {
+    document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.step-section[data-step="${n}"]`).classList.add('active');
+    document.querySelectorAll('.step').forEach((el, i) => {
+      el.classList.remove('active', 'done');
+      if (i + 1 < n) el.classList.add('done');
+      if (i + 1 === n) el.classList.add('active');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===== Package selection =====
+  document.querySelectorAll('.pkg-option').forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.pkg-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.pkg = opt.dataset.pkg;
+      updateSummary();
+    });
+  });
+
+  // ===== Calendar =====
+  let calDate = new Date(2026, 5, 1); // June 2026
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Pseudo-random "fully booked" dates and "unavailable" dates
+  function isFull(dateKey) {
+    // Some specific dates fully booked
+    const full = ['2026-06-12', '2026-06-13', '2026-07-03', '2026-07-04', '2026-07-17', '2026-08-07', '2026-08-14'];
+    return full.includes(dateKey);
+  }
+  function isUnavailable(d) {
+    // before today is unavailable
+    if (d < today) return true;
+    return false;
+  }
+
+  function renderCalendar() {
+    const grid = document.getElementById('cal-grid');
+    // Remove old day cells (keep dow row)
+    grid.querySelectorAll('.cal-day').forEach(el => el.remove());
+
+    const y = calDate.getFullYear();
+    const m = calDate.getMonth();
+
+    const monthNames = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+    const monthEn = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+    document.getElementById('cal-month-name').textContent = `${y}년 ${monthNames[m]}`;
+    document.getElementById('cal-month-en').textContent = monthEn[m];
+
+    const firstDay = new Date(y, m, 1);
+    const lastDay = new Date(y, m + 1, 0);
+    const startDow = firstDay.getDay();
+    const totalDays = lastDay.getDate();
+
+    // Empty cells before first day
+    for (let i = 0; i < startDow; i++) {
+      const e = document.createElement('button');
+      e.className = 'cal-day empty';
+      e.disabled = true;
+      grid.appendChild(e);
+    }
+
+    for (let d = 1; d <= totalDays; d++) {
+      const date = new Date(y, m, d);
+      const dow = date.getDay();
+      const key = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const btn = document.createElement('button');
+      btn.className = 'cal-day';
+      btn.dataset.date = key;
+      btn.innerHTML = `${d}<span class="day-tag"></span>`;
+
+      const isWeekend = (dow === 5 || dow === 6); // Fri/Sat departures incur surcharge
+      const unavailable = isUnavailable(date);
+      const fullBooked = isFull(key);
+
+      if (unavailable) {
+        btn.classList.add('disabled');
+        btn.disabled = true;
+      } else if (fullBooked) {
+        btn.classList.add('full');
+        btn.disabled = true;
+      } else if (isWeekend) {
+        btn.classList.add('weekend-warn');
+        btn.addEventListener('click', () => selectDate(key, true, btn));
+      } else {
+        btn.addEventListener('click', () => selectDate(key, false, btn));
+      }
+
+      if (state.date === key) btn.classList.add('selected');
+
+      grid.appendChild(btn);
+    }
+
+    // Prev button availability
+    const prevBtn = document.getElementById('cal-prev');
+    const curMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    prevBtn.disabled = (new Date(y, m, 1) <= curMonth);
+  }
+
+  function selectDate(key, isWeekend, btn) {
+    state.date = key;
+    state.weekend = isWeekend;
+    document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+    btn.classList.add('selected');
+    const nextBtn = document.getElementById('step2-next');
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = '1';
+    nextBtn.style.cursor = 'pointer';
+    updateSummary();
+  }
+
+  document.getElementById('cal-prev').addEventListener('click', () => {
+    calDate.setMonth(calDate.getMonth() - 1);
+    renderCalendar();
+  });
+  document.getElementById('cal-next').addEventListener('click', () => {
+    calDate.setMonth(calDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  renderCalendar();
+
+  // ===== Counters =====
+  document.querySelectorAll('.counter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      const delta = parseInt(btn.dataset.delta);
+      const cur = state[target];
+      let next = cur + delta;
+      const min = (target === 'adults') ? 1 : 0;
+      const max = 12;
+      if (next < min) next = min;
+      if (next > max) next = max;
+      state[target] = next;
+      document.getElementById('count-' + target).textContent = next;
+      updateSummary();
+    });
+  });
+
+  // ===== Options =====
+  document.querySelectorAll('.opt-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const key = item.dataset.opt;
+      const price = parseInt(item.dataset.price);
+      if (state.options[key]) {
+        delete state.options[key];
+        item.classList.remove('checked');
+      } else {
+        state.options[key] = { price, label: item.querySelector('.opt-item-body strong').textContent };
+        item.classList.add('checked');
+      }
+      updateSummary();
+    });
+  });
+
+  // ===== Summary =====
+  function fmt(n) { return '₩ ' + n.toLocaleString('ko-KR'); }
+
+  function updateSummary() {
+    if (!state.pkg) {
+      document.getElementById('sum-empty').style.display = 'block';
+      document.getElementById('sum-rows').style.display = 'none';
+      document.getElementById('sum-pkg').style.display = 'none';
+      return;
+    }
+    document.getElementById('sum-empty').style.display = 'none';
+    document.getElementById('sum-rows').style.display = 'block';
+    document.getElementById('sum-pkg').style.display = 'block';
+
+    document.getElementById('sum-pkg-name').textContent = PKG_NAMES[state.pkg];
+    document.getElementById('sum-pkg-detail').textContent = `${PKG_NIGHTS[state.pkg]}박 ${PKG_NIGHTS[state.pkg]+1}일 · 새벽 강남역 출발`;
+
+    const dateLabel = state.date
+      ? formatDate(state.date) + (state.weekend ? ' (주말)' : ' (평일)')
+      : '날짜 미선택';
+    document.getElementById('sum-date').textContent = dateLabel;
+
+    const pricePer = PKG_PRICES[state.pkg];
+    const adultsTotal = state.adults * pricePer;
+    const childrenTotal = state.children * Math.round(pricePer * 0.7);
+
+    document.getElementById('sum-adults-cnt').textContent = state.adults;
+    document.getElementById('sum-adults-amt').textContent = fmt(adultsTotal);
+    if (state.children > 0) {
+      document.getElementById('sum-children-row').style.display = '';
+      document.getElementById('sum-children-cnt').textContent = state.children;
+      document.getElementById('sum-children-amt').textContent = fmt(childrenTotal);
+    } else {
+      document.getElementById('sum-children-row').style.display = 'none';
+    }
+
+    const weekendAdd = state.weekend ? (state.adults + state.children) * 20000 : 0;
+    if (weekendAdd > 0) {
+      document.getElementById('sum-weekend-row').style.display = '';
+      document.getElementById('sum-weekend-amt').textContent = '+ ' + fmt(weekendAdd);
+    } else {
+      document.getElementById('sum-weekend-row').style.display = 'none';
+    }
+
+    // Options
+    const optRows = document.getElementById('sum-options');
+    optRows.innerHTML = '';
+    let optTotal = 0;
+    for (const [k, v] of Object.entries(state.options)) {
+      const occ = (k === 'pickup') ? 1 : (state.adults + state.children); // pickup once per booking
+      const sub = v.price * occ;
+      optTotal += sub;
+      const row = document.createElement('div');
+      row.className = 'sum-row faint';
+      row.innerHTML = `<span>${v.label}</span><strong>+ ${fmt(sub)}</strong>`;
+      optRows.appendChild(row);
+    }
+
+    const total = adultsTotal + childrenTotal + weekendAdd + optTotal;
+    document.getElementById('sum-total').textContent = fmt(total);
+    state.total = total;
+  }
+
+  function formatDate(key) {
+    const [y, m, d] = key.split('-');
+    const date = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+    const dows = ['일','월','화','수','목','금','토'];
+    return `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 (${dows[date.getDay()]})`;
+  }
+
+  // ===== Submit =====
+  function submitBooking(e) {
+    e.preventDefault();
+    if (!state.pkg || !state.date) {
+      alert('패키지와 출발일을 모두 선택해 주세요.');
+      return;
+    }
+    const fd = new FormData(e.target);
+    const booking = {
+      pkg: state.pkg,
+      pkgName: PKG_NAMES[state.pkg],
+      date: state.date,
+      dateLabel: formatDate(state.date),
+      weekend: state.weekend,
+      adults: state.adults,
+      children: state.children,
+      infants: state.infants,
+      options: Object.keys(state.options).map(k => state.options[k].label),
+      total: state.total,
+      name: fd.get('name'),
+      phone: fd.get('phone'),
+      email: fd.get('email'),
+      pickup: fd.get('pickup'),
+      memo: fd.get('memo'),
+      bookingId: 'INJ-' + Date.now().toString(36).toUpperCase()
+    };
+    try {
+      sessionStorage.setItem('inje_booking', JSON.stringify(booking));
+    } catch (_) {}
+    location.href = 'thanks.html';
+  }
+
+  updateSummary();
+</script>
+</body>
+</html>

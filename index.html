@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인제 숲결 — 인제군 공식 여행 패키지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ============== Landing-specific ============== */
+
+  /* Bright, airy verdant hero */
+  .hero-bright .hero-bg {
+    background-color: #8aab6c;
+  }
+  .hero-bright .hero-bg::after {
+    background:
+      /* warm sunlight glow from upper right */
+      radial-gradient(ellipse 90% 75% at 78% 12%, rgba(255, 245, 200, 0.55) 0%, rgba(255, 230, 160, 0.18) 35%, transparent 65%),
+      /* soft text protection in lower-left only */
+      radial-gradient(ellipse 55% 42% at 22% 80%, rgba(8,30,16,0.62) 0%, rgba(8,30,16,0.35) 40%, rgba(8,30,16,0.08) 70%, transparent 88%),
+      /* very gentle bottom fade for hero-to-section transition */
+      linear-gradient(180deg,
+        transparent 0%,
+        transparent 55%,
+        rgba(15, 30, 20, 0.18) 80%,
+        rgba(10, 25, 16, 0.55) 100%);
+  }
+  .hero-bright .hero-title {
+    text-shadow:
+      0 0 1px rgba(0,0,0,0.6),
+      0 2px 12px rgba(0,0,0,0.85),
+      0 4px 28px rgba(0,0,0,0.55);
+    color: #FAFAF6;
+  }
+  .hero-bright .hero-title em {
+    color: #F2F8E4;
+    font-style: italic;
+  }
+  .hero-bright .hero-tag {
+    text-shadow: 0 1px 10px rgba(0,0,0,0.7), 0 0 2px rgba(0,0,0,0.5);
+  }
+  .hero-bright .hero-meta {
+    text-shadow: 0 1px 8px rgba(0,0,0,0.55);
+  }
+  .hero-bright {
+    min-height: 640px;
+  }
+
+  /* Intro */
+  .intro {
+    padding-top: 140px;
+    padding-bottom: 140px;
+    background: var(--bg);
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    gap: 96px;
+    align-items: center;
+  }
+  .intro-img {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .intro-img img { width: 100%; height: 100%; object-fit: cover; }
+  .intro-img-caption {
+    position: absolute;
+    bottom: 20px; left: 20px;
+    background: rgba(250,250,246,0.95);
+    padding: 14px 18px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+  }
+  .intro-img-caption strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    margin-bottom: 2px;
+    color: var(--green-deep);
+  }
+  .intro-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+  .stat-num {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    line-height: 1;
+    color: var(--green-deep);
+    letter-spacing: -0.02em;
+  }
+  .stat-num .small-num { font-size: 22px; opacity: 0.7; }
+  .stat-label {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Packages section */
+  .packages {
+    background: var(--bg-cream);
+  }
+
+  .pkg-card.size-tall { grid-column: span 4; }
+  .pkg-card.size-wide { grid-column: span 8; flex-direction: row; }
+  .pkg-card.size-wide .pkg-card-img { aspect-ratio: auto; width: 55%; flex-shrink: 0; }
+  .pkg-card.size-wide .pkg-card-body { padding: 44px; justify-content: space-between; }
+
+  @media (max-width: 980px) {
+    .pkg-card.size-tall, .pkg-card.size-wide { grid-column: span 12; }
+    .pkg-card.size-wide { flex-direction: column; }
+    .pkg-card.size-wide .pkg-card-img { width: 100%; aspect-ratio: 4/3; }
+  }
+
+  /* Early bird section */
+  .earlybird {
+    background: var(--green-deep);
+    color: var(--bg);
+  }
+  .earlybird .eyebrow { color: var(--green-mist); }
+  .earlybird .eyebrow::before { background: var(--green-mist); }
+  .earlybird .h-section { color: var(--bg); max-width: 18ch; }
+  .earlybird .lead { color: rgba(250,250,246,0.78); }
+
+  .traffic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 64px;
+    align-items: start;
+  }
+
+  .traffic-chart {
+    background: rgba(250,250,246,0.04);
+    border: 1px solid rgba(250,250,246,0.12);
+    border-radius: 4px;
+    padding: 40px;
+  }
+  .chart-title {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--bg);
+    margin-bottom: 8px;
+  }
+  .chart-sub {
+    font-size: 12px;
+    color: rgba(250,250,246,0.55);
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+  }
+  .chart-bars {
+    display: flex;
+    align-items: end;
+    gap: 14px;
+    height: 200px;
+    margin-bottom: 16px;
+  }
+  .chart-bar {
+    flex: 1;
+    background: var(--green-soft);
+    border-radius: 2px 2px 0 0;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .chart-bar.peak {
+    background: var(--gold);
+  }
+  .chart-bar.early {
+    background: var(--green-mist);
+  }
+  .chart-bar::after {
+    content: attr(data-time);
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(250,250,246,0.55);
+    white-space: nowrap;
+  }
+  .chart-bar::before {
+    content: attr(data-val);
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(250,250,246,0.7);
+    white-space: nowrap;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(250,250,246,0.12);
+    font-size: 12px;
+  }
+  .chart-legend span { display: flex; align-items: center; gap: 8px; color: rgba(250,250,246,0.7); }
+  .chart-legend span::before { content: ""; width: 10px; height: 10px; border-radius: 1px; }
+  .chart-legend .lg-early::before { background: var(--green-mist); }
+  .chart-legend .lg-day::before { background: var(--green-soft); }
+  .chart-legend .lg-peak::before { background: var(--gold); }
+
+  .benefit-list { display: flex; flex-direction: column; }
+  .benefit-item {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(250,250,246,0.12);
+    align-items: start;
+  }
+  .benefit-item:first-child { border-top: 1px solid rgba(250,250,246,0.12); }
+  .benefit-num {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: var(--green-mist);
+    font-style: italic;
+  }
+  .benefit-body h4 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--bg);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .benefit-body p {
+    font-size: 14px;
+    color: rgba(250,250,246,0.7);
+    line-height: 1.65;
+  }
+  .benefit-time {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--green-mist);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 980px) {
+    .traffic-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  /* Itinerary */
+  .itinerary { background: var(--bg); }
+  .itin-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+  }
+  .itin-tab {
+    padding: 14px 24px;
+    font-size: 14px;
+    color: var(--ink-3);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .itin-tab.active {
+    color: var(--green-deep);
+    border-bottom-color: var(--green-deep);
+    font-weight: 500;
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+  .timeline-day h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--green-deep);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .timeline-day .day-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 32px;
+  }
+
+  .time-slot {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 24px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .time-slot:last-child { border-bottom: 1px solid var(--line); }
+  .time-slot-time {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--green);
+    font-weight: 500;
+    padding-top: 1px;
+  }
+  .time-slot h4 {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .time-slot p {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 880px) {
+    .timeline { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  /* Inclusions */
+  .inclusions {
+    background: var(--bg-cream);
+  }
+  .incl-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .incl-col {
+    padding: 48px;
+  }
+  .incl-col + .incl-col {
+    border-left: 1px solid var(--line);
+  }
+  .incl-col h4 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    margin-bottom: 28px;
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .incl-col.exc h4 { color: var(--ink-2); }
+  .incl-col h4::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green-deep);
+  }
+  .incl-col.exc h4::before { background: var(--ink-3); }
+
+  .incl-col ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .incl-col li {
+    font-size: 14px;
+    color: var(--ink-2);
+    padding-left: 22px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .incl-col li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 9px;
+    width: 10px; height: 1px;
+    background: var(--green);
+  }
+  .incl-col.exc li::before { background: var(--ink-3); }
+
+  @media (max-width: 880px) {
+    .incl-grid { grid-template-columns: 1fr; }
+    .incl-col + .incl-col { border-left: none; border-top: 1px solid var(--line); }
+  }
+
+  /* Military section */
+  .military {
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .military-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .military-img {
+    aspect-ratio: 5/6;
+    overflow: hidden;
+    border-radius: 4px;
+    position: relative;
+  }
+  .military-img img { width: 100%; height: 100%; object-fit: cover; }
+  .mil-card {
+    position: absolute;
+    bottom: 24px; left: 24px; right: 24px;
+    background: rgba(250,250,246,0.96);
+    padding: 24px;
+    border-radius: 2px;
+    backdrop-filter: blur(8px);
+  }
+  .mil-card-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .mil-card-row:last-child { border-bottom: none; }
+  .mil-card-row span:first-child { color: var(--ink-3); }
+  .mil-card-row span:last-child { color: var(--ink); font-weight: 500; }
+  .mil-card h4 {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    margin-bottom: 14px;
+    color: var(--green-deep);
+  }
+
+  .military-content h2 { margin-bottom: 24px; }
+  .military-content p { margin-bottom: 20px; }
+
+  .unit-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 32px;
+    margin: 36px 0;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .unit-list-item {
+    font-size: 14px;
+    color: var(--ink-2);
+    display: flex;
+    justify-content: space-between;
+  }
+  .unit-list-item strong { color: var(--ink); font-weight: 500; }
+
+  @media (max-width: 980px) {
+    .military-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  /* Reviews */
+  .reviews { background: var(--bg-cream); }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .review {
+    background: var(--bg);
+    padding: 36px;
+    border-radius: 4px;
+    border: 1px solid var(--line-2);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .review-stars {
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+  }
+  .review-title {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.35;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .review-body {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.7;
+    flex: 1;
+  }
+  .review-meta {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-2);
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .review-meta strong { color: var(--ink); font-weight: 500; }
+
+  @media (max-width: 980px) {
+    .reviews-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 680px) {
+    .reviews-grid { grid-template-columns: 1fr; }
+  }
+
+  /* FAQ */
+  .faq { background: var(--bg); }
+  .faq-list {
+    max-width: 900px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    padding: 28px 60px 28px 0;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .faq-q::after {
+    content: "+";
+    position: absolute;
+    right: 8px;
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--green-deep);
+    transition: transform 0.3s;
+  }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    color: var(--ink-2);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .faq-item.open .faq-a {
+    max-height: 400px;
+    padding: 0 60px 32px 0;
+  }
+
+  /* CTA banner */
+  .cta-banner {
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    background: var(--bg-deep);
+  }
+  .cta-banner-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.55;
+  }
+  .cta-banner-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15,40,22,0.45), rgba(15,40,22,0.75));
+  }
+  .cta-banner-inner {
+    position: relative;
+    padding: 140px var(--pad-x);
+    text-align: center;
+    color: var(--bg);
+    max-width: var(--container);
+    margin: 0 auto;
+  }
+  .cta-banner h2 {
+    color: var(--bg);
+    margin-bottom: 24px;
+  }
+  .cta-banner p {
+    color: rgba(250,250,246,0.78);
+    margin-bottom: 36px;
+    font-size: 17px;
+    max-width: 50ch;
+    margin-left: auto; margin-right: auto;
+  }
+
+  /* Gallery strip */
+  .gallery-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 0;
+  }
+  .gallery-strip img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .gallery-strip img:hover { transform: scale(1.04); }
+
+  @media (max-width: 680px) {
+    .gallery-strip { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body data-screen-label="00 Landing">
+
+<!-- ========== Nav ========== -->
+<nav class="nav invert" id="nav">
+  <a href="index.html" class="logo">
+    <span class="logo-mark"></span>
+    <span>
+      인제 숲결
+      <span class="logo-sub">INJE FOREST WHISPER</span>
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="#packages" class="nav-link">패키지</a>
+    <a href="packages/birch.html" class="nav-link">자작나무숲</a>
+    <a href="packages/blueberry.html" class="nav-link">블루베리 체험</a>
+    <a href="#military" class="nav-link">군장병 면회</a>
+    <a href="#faq" class="nav-link">자주 묻는 질문</a>
+  </div>
+  <a href="booking.html" class="btn btn-ghost-light">예약하기</a>
+</nav>
+
+<!-- ========== Hero ========== -->
+<header class="hero hero-bright" data-screen-label="Hero">
+  <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=2400&q=85&auto=format&fit=crop'); background-position: center 65%;"></div>
+  <div class="hero-content container-wide">
+    <div class="hero-meta">
+      <span>강원도 인제군</span>
+      <span>공식 여행 패키지</span>
+      <span>2026 시즌</span>
+    </div>
+    <h1 class="hero-title">
+      햇살이 머무는 숲,<br>
+      <em>푸른 인제</em>의<br>
+      가장 맑은 아침.
+    </h1>
+    <div class="hero-row">
+      <p class="hero-tag">
+        주말 정체를 피해 떠나는 얼리버드 1박 2일.
+        자작나무 숲과 블루베리 농원이 이른 아침 가장 싱그러운 얼굴을 보여드립니다.
+      </p>
+      <div class="hero-cta">
+        <a href="#packages" class="btn btn-ghost-light btn-arrow"><span>패키지 둘러보기</span></a>
+        <a href="booking.html" class="btn btn-primary btn-arrow" style="background:var(--bg); color:var(--green-deep);"><span>지금 예약</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</header>
+
+<!-- ========== Intro ========== -->
+<section class="intro" id="intro" data-screen-label="Intro">
+  <div class="container">
+    <div class="intro-grid">
+      <div class="intro-img">
+        <img src="assets/photos/birch-group.jpg" alt="원대리 자작나무 숲에서의 단체 사진">
+        <div class="intro-img-caption">
+          <strong>원대리 자작나무 숲</strong>
+          2026 결울 첫 일정 참여자 한 컷
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">왜 인제인가</div>
+        <h2 class="h-section" style="margin-top:20px; margin-bottom: 28px;">
+          서울에서 두 시간,<br>
+          한국에서 가장 깊은 숲을<br>
+          만나는 곳.
+        </h2>
+        <p class="lead" style="margin-bottom: 20px;">
+          백두대간이 굽이쳐 만든 강원도 인제군은 면적의 90% 이상이 산림으로 이루어져
+          있습니다. 원대리 자작나무 숲, 곰배령, 내린천 그리고 사계절 다른 표정의
+          농원이 이 작은 군에 모여 있습니다.
+        </p>
+        <p class="lead">
+          인제 숲결은 인제군과 함께 공식 등록된 농가·체험장만을 엮어,
+          관광객이 적은 평일 새벽에 출발하는 패키지를 운영합니다.
+          정체 없는 길과 사람 없는 숲, 그 두 가지를 약속드립니다.
+        </p>
+        <div class="intro-stats">
+          <div>
+            <div class="stat-num">90<span class="small-num">%</span></div>
+            <div class="stat-label">인제군 산림 비율</div>
+          </div>
+          <div>
+            <div class="stat-num">70<span class="small-num">만</span></div>
+            <div class="stat-label">자작나무 그루 수</div>
+          </div>
+          <div>
+            <div class="stat-num">2<span class="small-num">시간</span></div>
+            <div class="stat-label">서울 출발 기준</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Packages ========== -->
+<section class="packages" id="packages" data-screen-label="Packages">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">패키지</div>
+        <h2 class="h-section" style="margin-top: 20px;">
+          숲의 결을 따라,<br>네 가지 여정.
+        </h2>
+      </div>
+      <div class="sec-head-right">
+        <p class="lead">
+          모든 패키지는 평일 새벽 5시 30분 강남·잠실 출발을 기본으로 합니다.
+          소규모(최대 16명) 운영으로 숲의 고요함을 유지합니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="pkg-grid">
+      <!-- Hero card: Birch wide -->
+      <article class="pkg-card size-wide">
+        <div class="pkg-card-img">
+          <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1600&q=80&auto=format&fit=crop" alt="원대리 자작나무숲">
+          <span class="pkg-card-badge">대표 패키지</span>
+        </div>
+        <div class="pkg-card-body">
+          <div>
+            <div class="pkg-card-meta">
+              <span>NO. 01 · 1박 2일</span>
+              <span>연중 운영</span>
+            </div>
+            <h3 class="pkg-card-title" style="margin-top: 16px; margin-bottom: 14px;">원대리 자작나무 숲<br>새벽 트레킹 1박 2일</h3>
+            <p class="pkg-card-desc" style="font-size: 15px;">
+              관광객이 들어오기 전, 안개가 채 가시지 않은 시간에
+              자작나무 숲을 걷습니다. 숙소는 숲 입구의 한옥 스테이.
+              저녁은 인제 토속 산채정식으로 마무리합니다.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top: 20px;">
+              <span class="tag">자작나무숲</span>
+              <span class="tag">한옥 스테이</span>
+              <span class="tag">산채정식</span>
+              <span class="tag">새벽 트레킹</span>
+            </div>
+          </div>
+          <div class="pkg-card-foot">
+            <div class="pkg-card-price">
+              <span class="unit">1인 / 2인 1실 기준</span>
+              ₩ 189,000
+            </div>
+            <a href="packages/birch.html" class="btn-text">상세 보기 →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Blueberry tall -->
+      <article class="pkg-card size-tall">
+        <div class="pkg-card-img">
+          <img src="assets/photos/blueberry-picking.jpg" alt="블루베리 수확 참여자">
+          <span class="pkg-card-badge">시즌 한정</span>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-card-meta">
+            <span>NO. 02 · 1박 2일</span>
+            <span>6–8월</span>
+          </div>
+          <h3 class="pkg-card-title">인제 블루베리 농원<br>수확 체험 1박 2일</h3>
+          <p class="pkg-card-desc">
+            인제 북면 청정 농원에서 직접 블루베리를 따고, 잼과 사이다를 만듭니다.
+            수확분은 모두 가져가실 수 있습니다.
+          </p>
+          <div class="pkg-card-foot">
+            <div class="pkg-card-price">
+              <span class="unit">1인 / 2인 1실 기준</span>
+              ₩ 159,000
+            </div>
+            <a href="packages/blueberry.html" class="btn-text">상세 보기 →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Combo tall -->
+      <article class="pkg-card size-tall">
+        <div class="pkg-card-img">
+          <img src="https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=1200&q=80&auto=format&fit=crop" alt="콤보 패키지">
+          <span class="pkg-card-badge">베스트 셀러</span>
+        </div>
+        <div class="pkg-card-body">
+          <div class="pkg-card-meta">
+            <span>NO. 03 · 2박 3일</span>
+            <span>6–8월</span>
+          </div>
+          <h3 class="pkg-card-title">자작나무 + 블루베리<br>풀 코스 2박 3일</h3>
+          <p class="pkg-card-desc">
+            인제의 두 대표 체험을 한 번에. 둘째 날에는 내린천 래프팅이 옵션으로 포함됩니다.
+          </p>
+          <div class="pkg-card-foot">
+            <div class="pkg-card-price">
+              <span class="unit">1인 / 2인 1실 기준</span>
+              ₩ 349,000
+            </div>
+            <a href="booking.html?pkg=combo" class="btn-text">상세 보기 →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Military wide -->
+      <article class="pkg-card size-wide" style="background: var(--green-deep); color: var(--bg);">
+        <div class="pkg-card-img">
+          <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&q=80&auto=format&fit=crop" alt="인제 산맥">
+          <span class="pkg-card-badge" style="background:var(--gold); color:var(--bg);">가족 면회 전용</span>
+        </div>
+        <div class="pkg-card-body">
+          <div>
+            <div class="pkg-card-meta" style="color: rgba(250,250,246,0.55);">
+              <span>NO. 04 · 1박 2일</span>
+              <span>연중 운영</span>
+            </div>
+            <h3 class="pkg-card-title" style="color: var(--bg); margin-top: 16px; margin-bottom: 14px;">
+              군장병 가족 면회<br>1박 2일 패키지
+            </h3>
+            <p class="pkg-card-desc" style="color: rgba(250,250,246,0.78);">
+              인제 12사단·3군단 인근 부대 면회를 위한 가족 전용 패키지.
+              면회 일정에 맞춘 픽업·드롭과 부대 인근 숙소, 외박 외출 동선을 함께 설계해 드립니다.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top: 20px;">
+              <span class="tag tag-dark">부대 픽업·드롭</span>
+              <span class="tag tag-dark">외박 동선 설계</span>
+              <span class="tag tag-dark">가족 전용 차량</span>
+            </div>
+          </div>
+          <div class="pkg-card-foot" style="border-top-color: rgba(250,250,246,0.16);">
+            <div class="pkg-card-price" style="color: var(--bg);">
+              <span class="unit" style="color: rgba(250,250,246,0.55);">1인 / 2인 1실 기준</span>
+              ₩ 139,000
+            </div>
+            <a href="#military" class="btn-text" style="color: var(--bg); border-bottom-color: var(--bg);">상세 보기 →</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Early bird ========== -->
+<section class="earlybird" id="earlybird" data-screen-label="Earlybird">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">얼리버드 출발</div>
+        <h2 class="h-section" style="margin-top: 20px;">
+          새벽 5시 30분에<br>출발하는 이유.
+        </h2>
+      </div>
+      <div class="sec-head-right">
+        <p class="lead">
+          금요일 저녁 양양고속도로는 평균 110분이 더 걸립니다.
+          숲 입구에 9시에 도착하는 것과 12시에 도착하는 것은 다른 여행입니다.
+          저희는 시간을 패키지의 일부로 봅니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="traffic-grid">
+      <div class="traffic-chart">
+        <div class="chart-title">서울 → 인제 평균 소요시간</div>
+        <div class="chart-sub">금요일 출발 / 카카오내비 평균값 기준 · 2025</div>
+        <div class="chart-bars">
+          <div class="chart-bar early" style="height: 38%;" data-time="05:30" data-val="1h 50m"></div>
+          <div class="chart-bar early" style="height: 42%;" data-time="06:30" data-val="2h 00m"></div>
+          <div class="chart-bar" style="height: 58%;" data-time="08:00" data-val="2h 45m"></div>
+          <div class="chart-bar" style="height: 72%;" data-time="10:00" data-val="3h 25m"></div>
+          <div class="chart-bar peak" style="height: 96%;" data-time="14:00" data-val="4h 30m"></div>
+          <div class="chart-bar peak" style="height: 100%;" data-time="17:00" data-val="4h 40m"></div>
+          <div class="chart-bar" style="height: 60%;" data-time="20:00" data-val="2h 50m"></div>
+        </div>
+        <div class="chart-legend">
+          <span class="lg-early">얼리버드 (저희 출발)</span>
+          <span class="lg-day">일반 시간대</span>
+          <span class="lg-peak">정체 시간대</span>
+        </div>
+      </div>
+
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <div class="benefit-num">01</div>
+          <div class="benefit-body">
+            <h4>두 시간을 돌려드립니다</h4>
+            <p>서울 출발에서 인제 도착까지 평균 1시간 50분. 정체 시간대 대비 약 2시간 20분 절감.</p>
+          </div>
+          <div class="benefit-time">−2h 20m</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">02</div>
+          <div class="benefit-body">
+            <h4>안개 시간대 숲에 도착</h4>
+            <p>자작나무 숲 입구에 오전 8시 전 도착. 안개가 가장 진할 때 들어갑니다.</p>
+          </div>
+          <div class="benefit-time">08:00 도착</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">03</div>
+          <div class="benefit-body">
+            <h4>관광객이 없는 농원</h4>
+            <p>블루베리 농원은 단체 입장 전 1시간을 단독으로 사용합니다.</p>
+          </div>
+          <div class="benefit-time">독점 1h</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">04</div>
+          <div class="benefit-body">
+            <h4>아침 식사가 포함됩니다</h4>
+            <p>출발 직후 양평 휴게소에서 따뜻한 죽으로 아침을 드립니다.</p>
+          </div>
+          <div class="benefit-time">06:40</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Itinerary ========== -->
+<section class="itinerary" id="itinerary" data-screen-label="Itinerary">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">샘플 일정표</div>
+        <h2 class="h-section" style="margin-top: 20px;">
+          1박 2일,<br>분 단위까지 설계.
+        </h2>
+      </div>
+      <div class="sec-head-right">
+        <p class="lead">
+          자작나무숲 패키지의 표준 일정입니다. 실제 일정은 계절·날씨에 따라 일부 조정될 수 있습니다.
+          블루베리 패키지는 둘째 날 농원 일정이 추가됩니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="itin-tabs">
+      <button class="itin-tab active" data-tab="day1">Day 1 — 숲</button>
+      <button class="itin-tab" data-tab="day2">Day 2 — 마을</button>
+    </div>
+
+    <div class="timeline" id="day1">
+      <div class="timeline-day">
+        <span class="day-label">오전 · MORNING</span>
+        <h3>새벽 안개의 자작나무 숲</h3>
+        <div class="time-slot">
+          <div class="time-slot-time">05:30</div>
+          <div>
+            <h4>강남역 출발</h4>
+            <p>9-1번 출구 앞 전용 차량. 차내 모닝커피와 담요 제공.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">06:40</div>
+          <div>
+            <h4>양평 휴게소 — 아침 식사</h4>
+            <p>전복죽 또는 호박죽 중 선택. 약 35분 정차.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">08:10</div>
+          <div>
+            <h4>원대리 자작나무 숲 도착</h4>
+            <p>입구에서 가이드 미팅. 트레킹 스틱·미니 백 무상 대여.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">08:30</div>
+          <div>
+            <h4>안개 속 트레킹 (2시간)</h4>
+            <p>코스 A(2.7km 완만) 또는 코스 B(4km 정상) 선택.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">11:00</div>
+          <div>
+            <h4>숲 입구 카페 — 자유 시간</h4>
+            <p>자작나무 추출 시럽 라떼와 핸드드립 커피.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-day">
+        <span class="day-label">오후 · AFTERNOON</span>
+        <h3>마을, 그리고 한옥 저녁</h3>
+        <div class="time-slot">
+          <div class="time-slot-time">12:30</div>
+          <div>
+            <h4>인제읍 — 산채정식 점심</h4>
+            <p>인제 토속 산나물 9찬과 곤드레 솥밥.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">14:00</div>
+          <div>
+            <h4>한국시집박물관</h4>
+            <p>인제 출신 시인 박인환·이외수의 자료 관람.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">15:30</div>
+          <div>
+            <h4>합강정 — 내린천 산책</h4>
+            <p>전망대에서 인제의 두 물줄기가 만나는 풍경.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">17:00</div>
+          <div>
+            <h4>한옥 스테이 체크인</h4>
+            <p>인제 한옥마을. 객실 4채, 마당 화로.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">18:30</div>
+          <div>
+            <h4>저녁 — 화로 한정식</h4>
+            <p>한우 화로구이와 막걸리 한 잔, 마당에서.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline" id="day2" style="display:none;">
+      <div class="timeline-day">
+        <span class="day-label">오전 · MORNING</span>
+        <h3>물안개와 함께 깨어나기</h3>
+        <div class="time-slot">
+          <div class="time-slot-time">07:00</div>
+          <div>
+            <h4>한옥 마당 — 아침 차</h4>
+            <p>인제 자생 약초차와 떡, 계절 과일.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">08:30</div>
+          <div>
+            <h4>합강 미천골 산책</h4>
+            <p>가벼운 1시간 코스. 옵션: 패들보드(+₩25,000).</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">10:30</div>
+          <div>
+            <h4>인제 5일장 (시기 일치 시)</h4>
+            <p>2·7일장. 황태·잣·산나물 직거래.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">12:00</div>
+          <div>
+            <h4>황태 해장국 점심</h4>
+            <p>북면 용대리 황태마을 단골집.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-day">
+        <span class="day-label">오후 · AFTERNOON</span>
+        <h3>서울로, 천천히</h3>
+        <div class="time-slot">
+          <div class="time-slot-time">13:30</div>
+          <div>
+            <h4>인제 살둔 마을</h4>
+            <p>한반도 지형이 보이는 전망대 30분 산책.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">15:00</div>
+          <div>
+            <h4>출발 — 서울로</h4>
+            <p>주말 정체 시작 전. 휴게소 1회 정차.</p>
+          </div>
+        </div>
+        <div class="time-slot">
+          <div class="time-slot-time">17:30</div>
+          <div>
+            <h4>강남역 도착 · 해산</h4>
+            <p>잠실역 경유 가능 (선택).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Inclusions ========== -->
+<section class="inclusions" data-screen-label="Inclusions">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">포함 / 불포함</div>
+        <h2 class="h-section" style="margin-top: 20px;">정확하게,<br>투명하게.</h2>
+      </div>
+      <div class="sec-head-right">
+        <p class="lead">
+          모든 패키지 공통 사항입니다. 시즌·옵션에 따라 추가/변경되는 항목은 상세 페이지에 안내드립니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="incl-grid">
+      <div class="incl-col">
+        <h4>포함되는 것</h4>
+        <ul>
+          <li>왕복 전용 차량 (16인승 리무진, 운전기사·인솔자 동승)</li>
+          <li>전 일정 숙박 (한옥 스테이 또는 펜션 2인 1실 기준)</li>
+          <li>1일차 아침 죽 · 점심 산채정식 · 저녁 화로한정식</li>
+          <li>2일차 한옥 마당 차 · 점심 황태해장국</li>
+          <li>자작나무숲 가이드 트레킹 (2시간)</li>
+          <li>트레킹 스틱·미니 백·우비 대여</li>
+          <li>여행자 보험 (1일 1억 한도)</li>
+          <li>전 일정 사진 촬영 (디지털 30장 이상 전달)</li>
+        </ul>
+      </div>
+      <div class="incl-col exc">
+        <h4>포함되지 않는 것</h4>
+        <ul>
+          <li>개인 간식·주류 (한옥 저녁 시 막걸리 1병은 포함)</li>
+          <li>1인 1실 사용 시 싱글차지 (+₩40,000)</li>
+          <li>옵션 액티비티 (패들보드·래프팅·승마 등)</li>
+          <li>여행자 본인 부주의로 인한 손상·분실</li>
+          <li>천재지변에 의한 일정 변경 시 추가 비용</li>
+          <li>호텔 미니바·룸서비스 등 개인 사용 요금</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Military ========== -->
+<section class="military" id="military" data-screen-label="Military">
+  <div class="container">
+    <div class="military-grid">
+      <div class="military-img">
+        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1400&q=80&auto=format&fit=crop" alt="인제 산자락">
+        <div class="mil-card">
+          <h4>면회 픽업 가능 부대</h4>
+          <div class="mil-card-row"><span>12사단 (을지부대)</span><span>인제읍 합강리</span></div>
+          <div class="mil-card-row"><span>3군단 직할대</span><span>북면 한계리</span></div>
+          <div class="mil-card-row"><span>특수전사령부</span><span>남면 신남리</span></div>
+          <div class="mil-card-row"><span>방공기지·통신대</span><span>인제 전역</span></div>
+        </div>
+      </div>
+      <div class="military-content">
+        <div class="eyebrow">군장병 가족을 위해</div>
+        <h2 class="h-section" style="margin-top: 20px;">
+          면회 가는 길도,<br>여행이 되도록.
+        </h2>
+        <p class="lead">
+          인제에는 강원도에서 가장 많은 부대가 모여 있습니다. 자녀를 면회 보내는
+          부모님께서 새벽 운전과 외박 동선까지 챙기시는 것을 자주 보았습니다.
+        </p>
+        <p class="lead">
+          인제 숲결 가족 면회 패키지는 부대 시간표에 맞춰 일정을 설계합니다.
+          토요일 오전 면회 후 부대 근처 숙소에서 외박,
+          일요일 오후 귀대까지의 시간을 가족과 보낼 수 있도록 동선을 짜드립니다.
+        </p>
+
+        <div class="unit-list">
+          <div class="unit-list-item"><span>출발 시간</span><strong>금요일 19:00 / 토요일 05:30</strong></div>
+          <div class="unit-list-item"><span>차량</span><strong>가족 전용 (4–8인승)</strong></div>
+          <div class="unit-list-item"><span>숙소</span><strong>부대 차량 10분 거리</strong></div>
+          <div class="unit-list-item"><span>외박 동선</span><strong>맞춤 설계 (무료)</strong></div>
+          <div class="unit-list-item"><span>1인 가격</span><strong>₩ 139,000 부터</strong></div>
+          <div class="unit-list-item"><span>3인 이상 시</span><strong>인당 10% 할인</strong></div>
+        </div>
+
+        <a href="booking.html?pkg=military" class="btn btn-primary btn-arrow"><span>가족 면회 패키지 예약</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Gallery strip ========== -->
+<div class="gallery-strip" data-screen-label="Gallery">
+  <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&q=80&auto=format&fit=crop" alt="">
+  <img src="assets/photos/blueberry-picking.jpg" alt="블루베리 수확 한 컷">
+  <img src="assets/photos/birch-group.jpg" alt="자작나무 숲 단체 사진">
+  <img src="https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=800&q=80&auto=format&fit=crop" alt="">
+</div>
+
+<!-- ========== Reviews ========== -->
+<section class="reviews" data-screen-label="Reviews">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">다녀오신 분들</div>
+        <h2 class="h-section" style="margin-top: 20px;">실제 후기,<br>편집 없이.</h2>
+      </div>
+      <div class="sec-head-right">
+        <p class="lead">
+          2025년 4월 ~ 2026년 4월까지 다녀가신 분들의 후기 일부입니다.
+          별점 평균 <strong style="color: var(--ink);">4.87 / 5.0</strong> (387건 기준).
+        </p>
+      </div>
+    </div>
+
+    <div class="reviews-grid">
+      <article class="review">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-title">"안개 낀 자작나무 사이로 들어갈 때, 진짜로 다른 세계였습니다."</div>
+        <p class="review-body">
+          새벽에 일어나는 게 부담이었는데, 막상 8시에 도착해서 안개 낀 숲을 걸어보니
+          왜 새벽 출발인지 알겠더라고요. 관광객 한 명도 없었습니다.
+          가이드 분이 자작나무에 얽힌 이야기를 차분히 해주셔서 인상 깊었습니다.
+        </p>
+        <div class="review-meta">
+          <span><strong>김○○</strong> · 자작나무숲 1박 2일</span>
+          <span>2026.04</span>
+        </div>
+      </article>
+      <article class="review">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-title">"아들 면회 가는 길이 처음으로 편했습니다."</div>
+        <p class="review-body">
+          7년 동안 매번 운전해서 인제 12사단에 가는 게 일이었는데,
+          이번에는 차에서 자고 일어나니 도착해 있었습니다. 외박 동선까지
+          짜주셔서 아들이랑 한옥에서 저녁 먹은 게 잊히지 않습니다.
+          진심으로 감사드립니다.
+        </p>
+        <div class="review-meta">
+          <span><strong>박○○</strong> · 가족 면회 패키지</span>
+          <span>2026.03</span>
+        </div>
+      </article>
+      <article class="review">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-title">"블루베리 잼이 아직도 냉장고에 있습니다."</div>
+        <p class="review-body">
+          아이 둘 데리고 다녀왔는데 농원 1시간 독점이 정말 좋았어요.
+          뛰어다녀도 눈치 안 봐도 되고, 직접 딴 블루베리로 잼 만드는 체험까지
+          하니 아이들이 한 달 동안 그 얘기만 합니다. 다음엔 자작나무도 갈 거예요.
+        </p>
+        <div class="review-meta">
+          <span><strong>이○○</strong> · 블루베리 1박 2일</span>
+          <span>2025.07</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="faq" id="faq" data-screen-label="FAQ">
+  <div class="container">
+    <div class="sec-head" style="grid-template-columns: 1fr; text-align: center; justify-items: center; margin-bottom: 60px;">
+      <div>
+        <div class="eyebrow">자주 묻는 질문</div>
+        <h2 class="h-section" style="margin-top: 20px; max-width: none;">
+          궁금하신 점, 미리 답해드립니다.
+        </h2>
+      </div>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item open">
+        <button class="faq-q">새벽 5시 30분 출발이 너무 이르지 않나요?<span></span></button>
+        <div class="faq-a">
+          차내에서 충분히 주무실 수 있도록 담요와 목베개를 제공해 드립니다.
+          좌석은 차량 정원의 80%만 채워 옆자리에 여유가 있으며, 첫 30분은 차내 조명을 끄고 운행합니다.
+          출발 30분 전부터 인근에 무료 주차 위치를 안내해 드리니 조금 일찍 도착하셔서 정리하실 수 있습니다.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">예약 후 일정 변경이나 취소가 가능한가요?<span></span></button>
+        <div class="faq-a">
+          출발 7일 전까지는 무료 변경·취소가 가능합니다. 6~3일 전 30%, 2~1일 전 50%,
+          당일 100%의 취소 수수료가 발생합니다. 군장병 가족 면회 패키지의 경우, 부대 일정 변경으로 인한
+          취소 시 출발 24시간 전까지 무료 취소가 적용됩니다.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">우천 시에도 진행되나요?<span></span></button>
+        <div class="faq-a">
+          가벼운 비는 그대로 진행하며 우비를 무료로 제공합니다.
+          호우주의보 이상의 기상 특보가 발효되는 경우 출발 24시간 전 안내드리고,
+          전액 환불 또는 일정 변경 중 선택하실 수 있습니다.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">자녀(어린이·유아) 동반이 가능한가요?<span></span></button>
+        <div class="faq-a">
+          만 5세 이상부터 참여 가능합니다. 만 5~12세는 카시트가 필요하며 무료로 대여해 드립니다.
+          블루베리 패키지는 가족 동반에 가장 적합하며, 자작나무숲 트레킹은 만 8세 이상을 권장드립니다.
+          아동 요금은 1인 요금의 70%입니다.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">반려동물과 함께 가도 되나요?<span></span></button>
+        <div class="faq-a">
+          반려동물 동반은 한옥 스테이의 정책상 현재 받지 않고 있습니다.
+          다만 펜션 객실로 변경 가능한 일정에 한해, 1박당 ₩30,000의 추가 비용으로 동반이 가능합니다.
+          사전 문의해 주시면 안내해 드리겠습니다.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">서울 외 지역에서도 출발 가능한가요?<span></span></button>
+        <div class="faq-a">
+          기본 출발지는 강남역·잠실역입니다. 분당·판교 픽업은 무료, 일산·인천은 ₩15,000의 추가 비용으로 가능합니다.
+          4인 이상 단체의 경우 자택 픽업도 별도 협의가 가능합니다.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">결제는 어떻게 진행되나요?<span></span></button>
+        <div class="faq-a">
+          예약 시 30% 계약금 결제, 출발 7일 전 잔금 70%를 결제하시는 방식입니다.
+          신용카드 일시불·무이자 할부(6개월), 계좌 이체 모두 가능합니다. 카카오페이·네이버페이도 지원합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA Banner ========== -->
+<section class="cta-banner" data-screen-label="CTA">
+  <div class="cta-banner-bg" style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=2400&q=80&auto=format&fit=crop')"></div>
+  <div class="cta-banner-inner">
+    <div class="eyebrow" style="color: var(--green-mist); justify-content: center;">2026 시즌 예약 오픈</div>
+    <h2 class="h-section" style="margin-top: 24px;">
+      가장 조용한 시간의 인제를,<br>먼저 만나보세요.
+    </h2>
+    <p>
+      평일 출발은 1주일 전 예약이 가장 좋습니다. 주말 출발은 2주 전부터 마감이 시작됩니다.
+    </p>
+    <a href="booking.html" class="btn btn-primary btn-arrow" style="background: var(--bg); color: var(--green-deep);"><span>달력에서 날짜 보기</span></a>
+  </div>
+</section>
+
+<!-- ========== Footer ========== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">인제 숲결</div>
+        <p style="font-size: 14px; line-height: 1.7; max-width: 36ch;">
+          강원도 인제군 공식 등록 여행 패키지.<br>
+          숲과 사람의 거리를, 가까이.
+        </p>
+        <div style="display: flex; gap: 12px; margin-top: 24px;">
+          <span class="tag tag-dark" style="background: rgba(250,250,246,0.08); color: rgba(250,250,246,0.7); border-color: transparent;">관광사업등록 제2024-01호</span>
+        </div>
+      </div>
+      <div>
+        <h4>패키지</h4>
+        <ul>
+          <li><a href="packages/birch.html">자작나무숲 1박 2일</a></li>
+          <li><a href="packages/blueberry.html">블루베리 1박 2일</a></li>
+          <li><a href="booking.html?pkg=combo">콤보 2박 3일</a></li>
+          <li><a href="booking.html?pkg=military">가족 면회 패키지</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>안내</h4>
+        <ul>
+          <li><a href="#faq">자주 묻는 질문</a></li>
+          <li><a href="#earlybird">얼리버드 안내</a></li>
+          <li><a href="#military">군장병 가족 안내</a></li>
+          <li><a href="booking.html">예약 / 결제</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>연락</h4>
+        <ul>
+          <li>1588-0000</li>
+          <li>hello@injesoop.kr</li>
+          <li>강원도 인제군 인제읍</li>
+          <li>평일 09:00 ~ 19:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 인제 숲결 협동조합. All rights reserved.</span>
+      <span>이용약관 · 개인정보처리방침 · 사업자정보</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll behavior
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    if (window.scrollY > 80) {
+      nav.classList.add('scrolled');
+      nav.classList.remove('invert');
+    } else {
+      nav.classList.remove('scrolled');
+      nav.classList.add('invert');
+    }
+  };
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Itinerary tabs
+  document.querySelectorAll('.itin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.itin-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('day1').style.display = (target === 'day1') ? 'grid' : 'none';
+      document.getElementById('day2').style.display = (target === 'day2') ? 'grid' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>
