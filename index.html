@@ -613,12 +613,155 @@
   }
   .gallery-strip img:hover { transform: scale(1.04); }
 
+  /* =============================================
+     Under-construction notice modal
+     ============================================= */
+  .uc-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(10, 22, 14, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .uc-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .uc-card {
+    background: var(--bg);
+    max-width: 460px;
+    width: 100%;
+    border-radius: 8px;
+    padding: 48px 44px 40px;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(15, 26, 18, 0.35);
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: center;
+  }
+  .uc-overlay.show .uc-card { transform: translateY(0) scale(1); }
+
+  .uc-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink-3);
+    font-size: 22px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .uc-close:hover {
+    background: var(--bg-cream);
+    color: var(--ink);
+  }
+
+  .uc-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: var(--bg-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .uc-icon::before {
+    content: "";
+    width: 28px;
+    height: 28px;
+    background: var(--green-deep);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v6'/><path d='M12 22v-2'/><circle cx='12' cy='14' r='8'/><path d='M9 14h6'/><path d='M12 11v6'/></svg>") no-repeat center / contain;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v6'/><path d='M12 22v-2'/><circle cx='12' cy='14' r='8'/><path d='M9 14h6'/><path d='M12 11v6'/></svg>") no-repeat center / contain;
+  }
+
+  .uc-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .uc-card h3 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  .uc-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin-bottom: 28px;
+  }
+
+  .uc-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  .uc-actions .btn-primary {
+    min-width: 220px;
+  }
+  .uc-dontshow {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .uc-dontshow input { accent-color: var(--green-deep); }
+
   @media (max-width: 680px) {
     .gallery-strip { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
 <body data-screen-label="00 Landing">
+
+<!-- ========== Under-construction notice ========== -->
+<div class="uc-overlay" id="uc-overlay" role="dialog" aria-modal="true" aria-labelledby="uc-title">
+  <div class="uc-card">
+    <button class="uc-close" id="uc-close" aria-label="닫기">×</button>
+    <div class="uc-icon" aria-hidden="true"></div>
+    <span class="uc-eyebrow">안내 말씀</span>
+    <h3 id="uc-title">현재 웹사이트 제작 중입니다</h3>
+    <p>
+      인제 숲결 여행 패키지 사이트는 현재 공개 준비 중입니다.<br>
+      날짜·가격·일정 등 일부 정보는 추후 변경될 수 있으며,<br>
+      정식 오픈 전까지 실제 예약은 접수되지 않습니다.
+    </p>
+    <div class="uc-actions">
+      <button class="btn btn-primary" id="uc-ok">둘러보기</button>
+      <label class="uc-dontshow">
+        <input type="checkbox" id="uc-dontshow"> 오늘 하루 다시 보지 않기
+      </label>
+    </div>
+  </div>
+</div>
 
 <!-- ========== Nav ========== -->
 <nav class="nav invert" id="nav">
@@ -1381,7 +1524,7 @@
         <h4>연락</h4>
         <ul>
           <li>1588-0000</li>
-          <li>hello@injesoop.kr</li>
+          <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aec6cbc2c2c1eec7c0c4cbddc1c1de80c5dc">[email&#160;protected]</a></li>
           <li>강원도 인제군 인제읍</li>
           <li>평일 09:00 ~ 19:00</li>
         </ul>
@@ -1394,7 +1537,41 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ========== Under-construction notice ==========
+  (function() {
+    const overlay = document.getElementById('uc-overlay');
+    const closeBtn = document.getElementById('uc-close');
+    const okBtn = document.getElementById('uc-ok');
+    const dontshow = document.getElementById('uc-dontshow');
+
+    const KEY = 'inje_uc_hidden_until';
+    const hideUntil = parseInt(localStorage.getItem(KEY) || '0', 10);
+    const now = Date.now();
+
+    if (now > hideUntil) {
+      // show after a tiny delay so the page paints first
+      setTimeout(() => overlay.classList.add('show'), 250);
+    }
+
+    function dismiss() {
+      overlay.classList.remove('show');
+      if (dontshow.checked) {
+        // hide for 24h
+        localStorage.setItem(KEY, String(now + 24 * 60 * 60 * 1000));
+      }
+    }
+
+    closeBtn.addEventListener('click', dismiss);
+    okBtn.addEventListener('click', dismiss);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) dismiss();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('show')) dismiss();
+    });
+  })();
+
   // Nav scroll behavior
   const nav = document.getElementById('nav');
   const onScroll = () => {
